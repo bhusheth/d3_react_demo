@@ -1,26 +1,53 @@
 import React from 'react';
-import logo from './logo.svg';
+import Viz from './Viz';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  state = {
+    color: '',
+    width: '',
+    toDraw: [],
+  };
+
+  onSubmit = (evt) => {
+    evt.preventDefault();
+    const newShape = {
+      color: this.state.color,
+      width: this.state.width,
+    };
+    this.setState({ toDraw: [...this.state.toDraw, newShape] });
+  };
+
+  onChange = (evt) => {
+    this.setState({ [evt.target.name]: evt.target.value });
+  };
+
+  render() {
+    return (
+      <div className="controller">
+        <form onSubmit={this.onSubmit}>
+          <label htmlFor="colorSelect">pick a color:</label>
+          <select
+            id="colorSelect"
+            name="color"
+            onChange={this.onChange}
+            value={this.state.color || 'default'}
+          >
+            <option disabled value="default">
+              choose
+            </option>
+            <option value="red">red</option>
+            <option value="orange">orange</option>
+            <option value="yellow">yellow</option>
+          </select>
+          <label htmlFor="pixelInput">how big:</label>
+          <input id="pixelInput" name="width" onChange={this.onChange} />
+          <button type="submit">draw!</button>
+        </form>
+        {this.state.toDraw.length ? <Viz shapes={this.state.toDraw} /> : null}
+      </div>
+    );
+  }
 }
 
 export default App;
